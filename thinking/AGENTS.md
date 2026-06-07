@@ -25,6 +25,9 @@
 | [ml-research-project-repo-structure.md](ml-research-project-repo-structure.md) | ML Research 项目仓库结构 | 经典 ML research repo 应组织为 code system、infra system、research ledger、deliverables、project memory，并用 validator + auditor skill 防止证据链漂移 |
 | [agent-development-repo-structure.md](agent-development-repo-structure.md) | Agent 开发项目仓库结构 | Agent repo 应组织为 lab system、deliverables、project memory，并用 capability evidence chain 和 drift control 支撑可控开发 |
 | [production-agent-development-methodology.md](production-agent-development-methodology.md) | 生产级 Agent 开发方法论 | 2025-2026 官方资料显示，Agent 开发正在从 prompt+tools 转向 controlled runtime、context engineering、trace-native eval loop 和 production control plane |
+| [target-and-harness-in-agent-first-repos.md](target-and-harness-in-agent-first-repos.md) | Target 与 Harness 的仓库边界 | AI Agent 时代的 repo 会从“代码/内容仓库”演化成“目标系统 + 驭缰系统”的复合体 |
+| [harness-and-skills-two-dimensional-agent-design.md](harness-and-skills-two-dimensional-agent-design.md) | Harness 与 Skills 的二维设计 | 个人 Agent 系统应横向用 harness 管理领域，纵向用 skills 沉淀可复用工作流 |
+| [agent-native-research-project-structure.md](agent-native-research-project-structure.md) | Agent-Native 科研项目结构 | 面向会议论文的科研项目应由 management graph、epistemic graph 与 production artifacts 共同驱动 |
 
 ## 写作方向参考
 
