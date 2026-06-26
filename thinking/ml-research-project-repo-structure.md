@@ -1528,7 +1528,137 @@ my-diffusion-project/
 
 ---
 
-## 15. 结论
+## 15. 防漂移机制：机械检查 + 审核 Skill
+
+上面的结构如果只停留在文档里，长期开发后一定会漂移。
+
+典型漂移包括：
+
+- 新增了实验目录，但没有绑定 claim；
+- 论文表格出现了数字，但 `research/evidence.yaml` 没有对应 evidence；
+- result index 记录了 artifact，但没有 source config / commit；
+- 某个 config 写死了服务器绝对路径；
+- baseline 复现状态变了，但 reviewer risk 没更新；
+- `memory/current-status.md` 过期，Agent 接手时只能靠聊天记录猜下一步；
+- private overlay、真实路径或敏感信息被误提交。
+
+所以这套 repo 结构需要两层守护。
+
+### 15.1 确定性 validator
+
+仓库应提供一个脚本，例如：
+
+```text
+scripts/check-research-harness.py
+```
+
+它进入 pre-commit 或 CI，负责检查那些可以机械验证的事情：
+
+```text
+structure:
+  必需目录和入口文件存在
+
+schema:
+  claims / evidence / experiment-ledger / result-index 可解析
+
+referential integrity:
+  experiment 引用的 claim 存在
+  evidence 引用的 experiment / artifact 存在
+  artifact 支持的 evidence 存在
+
+experiment contract:
+  每个 code/experiments/E###-* 都有 experiment-card.md、config.yaml、linked-claims.yaml
+  每个实验至少绑定一个 CLM-* 或 HYP-*
+
+infra contract:
+  config 和 ledger 不写裸绝对路径
+  infra/private、runs、*.log 被 gitignore
+
+memory freshness:
+  memory/current-status.md 写明当前目标、阻塞/风险、下一步
+
+privacy:
+  不提交 token、password、private key、真实私有 overlay
+```
+
+这个 validator 不判断研究是否正确。它只回答：
+
+```text
+这个 repo 的证据链有没有机械断裂？
+```
+
+本学习仓库已经给出一个可复用起点：
+
+```text
+scripts/check-research-harness.py
+```
+
+未来创建 ML research repo 时，可以把它复制进去，并在 CI 里运行：
+
+```bash
+python3 scripts/check-research-harness.py
+```
+
+### 15.2 语义审核 Skill
+
+还有一些问题不能只靠脚本判断：
+
+- 实验是否真的支持它声称支持的 claim；
+- partial evidence 是否被过早升级成 supported claim；
+- baseline comparison 是否公平；
+- negative result 是否改变了论文叙事；
+- reviewer risk 是否有 action 承接；
+- paper table 是否选择性展示样本或数字。
+
+这些应该交给一个专门的审核 skill：
+
+```text
+skills/research-repo-auditor/SKILL.md
+```
+
+它的职责不是重写项目结构，而是定期做 harness audit：
+
+```text
+mechanical validator output
+  -> semantic audit
+  -> ranked findings
+  -> required fixes before submission / release / next large experiment
+```
+
+理想输出不是泛泛建议，而是：
+
+```text
+Findings
+- [High] deliverables/paper/tables/table2.tex 引用了 3 个数字，但只有 1 个能回溯到 EVD-*。
+- [High] E004 声称支持 CLM-002，但 linked config 使用了不同 data split。
+- [Medium] BASE-004 使用 official checkpoint，BASE-001 是重新训练，comparison-matrix 没声明 checkpoint source 差异。
+
+Validation
+- python3 scripts/check-research-harness.py: failed, 4 structural defects.
+
+Residual Risk
+- 没有重新跑实验，只审核了 repo 中已有证据链。
+```
+
+换句话说：
+
+```text
+validator 守结构不变量；
+auditor skill 守研究语义和 harness 纪律。
+```
+
+前者适合每次 commit 跑，后者适合这些节点跑：
+
+- 新增一批实验后；
+- 主要表格进论文前；
+- claim 从 partial 升级 supported 前；
+- rebuttal 前；
+- artifact release 前；
+- 长时间多 Agent 开发后。
+
+---
+
+## 16. 结论
 
 一个经典 ML research project 的 repo，不应该只服务“写代码”和“写论文”。
 
@@ -1555,4 +1685,3 @@ my-diffusion-project/
 这套结构的核心价值可以概括为：
 
 > 把 ML research 从一堆脚本、日志和论文草稿，变成一个 claim-driven、infra-aware、可复现、可接续的研究系统。
-
