@@ -23,6 +23,8 @@
 | [subagent-is-child-runtime.md](subagent-is-child-runtime.md) | Subagent 是 child runtime | 与 Claude Code 架构逆向互证：subagent = tool-call-triggered child session + context projection + evidence-return contract |
 | [why-this-project-exists.md](why-this-project-exists.md) | 为什么有这个项目 | 项目宗旨：把 Harness Engineering 从"概念集合"变成"可复刻的产品构建方法论"——借用《诡秘之主》"学徒途径"隐喻 |
 | [ml-research-project-repo-structure.md](ml-research-project-repo-structure.md) | ML Research 项目仓库结构 | 经典 ML research repo 应组织为 code system、infra system、research ledger、deliverables、project memory，并用 validator + auditor skill 防止证据链漂移 |
+| [agent-development-repo-structure.md](agent-development-repo-structure.md) | Agent 开发项目仓库结构 | Agent repo 应组织为 lab system、deliverables、project memory，并用 capability evidence chain 和 drift control 支撑可控开发 |
+| [production-agent-development-methodology.md](production-agent-development-methodology.md) | 生产级 Agent 开发方法论 | 2025-2026 官方资料显示，Agent 开发正在从 prompt+tools 转向 controlled runtime、context engineering、trace-native eval loop 和 production control plane |
 
 ## 写作方向参考
 
